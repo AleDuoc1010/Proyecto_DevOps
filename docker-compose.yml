@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # 1. SERVICIO DE BASE DE DATOS
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tienda_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql  
+    networks:
+      - devops-network
+
+# 2. SERVICIO BACKEND VENTAS
+  back-ventas:
+    build:
+      context: ./back-Ventas_Springboot/Springboot-API-REST
+      dockerfile: Dockerfile
+    container_name: api-ventas
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/tienda_db?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    networks:
+      - devops-network
+
+# 3. SERVICIO BACKEND DESPACHOS
+  back-despachos:
+    build:
+      context: ./back-Despachos_Springboot/Springboot-API-REST-DESPACHO
+      dockerfile: Dockerfile
+    container_name: api-despachos
+    restart: always
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/tienda_db?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    networks:
+      - devops-network
+
+  # 4. SERVICIO FRONTEND
+  frontend:
+    build:
+      context: ./front_despacho
+      dockerfile: Dockerfile
+    container_name: web-frontend
+    restart: always
+    ports:
+      - "80:8080"  
+    depends_on:
+      - back-ventas
+      - back-despachos
+    networks:
+      - devops-network
+
+# DEFINICIÓN DE REDES
+networks:
+  devops-network:
+    driver: bridge
+
+# DEFINICIÓN DE VOLÚMENES
+volumes:
+  db_data:
