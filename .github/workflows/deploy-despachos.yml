@@ -41,4 +41,4 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/back-despachos:latest
             docker stop back-despachos || true
             docker rm back-despachos || true
-            docker run -d -p 8082:8080 --name back-despachos ${{ secrets.DOCKERHUB_USERNAME }}/back-despachos:latest
+            docker run -d -p 8082:8080 -e SPRING_DATASOURCE_URL="jdbc:mysql://${{ secrets.EC2_PRIVATE_HOST }}:3306/tienda_db?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true" -e SPRING_DATASOURCE_USERNAME=root -e SPRING_DATASOURCE_PASSWORD=root --name back-despachos ${{ secrets.DOCKERHUB_USERNAME }}/back-despachos:latest

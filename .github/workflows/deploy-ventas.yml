@@ -41,4 +41,4 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/back-ventas:latest
             docker stop back-ventas || true
             docker rm back-ventas || true
-            docker run -d -p 8081:8080 --name back-ventas ${{ secrets.DOCKERHUB_USERNAME }}/back-ventas:latest
+            docker run -d -p 8081:8080 -e SPRING_DATASOURCE_URL="jdbc:mysql://${{ secrets.EC2_PRIVATE_HOST }}:3306/tienda_db?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true" -e SPRING_DATASOURCE_USERNAME=root -e SPRING_DATASOURCE_PASSWORD=root --name back-ventas ${{ secrets.DOCKERHUB_USERNAME }}/back-ventas:latest
