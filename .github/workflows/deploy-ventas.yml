@@ -24,7 +24,8 @@ jobs:
       - name: Construir y Subir Imagen
         uses: docker/build-push-action@v4
         with:
-          context: ./back-Ventas_SpringBoot
+          context: ./back-Ventas_SpringBoot/Springboot-API-REST
+          file: ./back-Ventas_SpringBoot/Springboot-API-REST/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/back-ventas:latest
 
