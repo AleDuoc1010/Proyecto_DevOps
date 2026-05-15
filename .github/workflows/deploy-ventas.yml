@@ -5,7 +5,7 @@ on:
     branches:
       - deploy
     paths:
-      - 'back-Ventas_SpringBoot/**'
+      - 'back-Ventas_SpringBoot/Springboot-API-REST'
   workflow_dispatch:
 
 jobs:
